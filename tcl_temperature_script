@@ -1,0 +1,13 @@
+#get temperature from userin degree Celcius, convert it to degree F and display message after evaluating the temperature
+puts "What is the temperature outside in Celcius? "
+gets stdin tempC
+set tempF [expr "((9.0/5) * $tempC) + 32"]
+puts "The temperature is $tempF degree Fahrenheit"
+
+if {$tempF < 40.0} {
+puts "Please take a coat with you when going outside!"
+}  elseif {$tempF > 80.0} {
+puts "Please avoid sunburn when you go outside!"
+} else {
+puts "Have a nice day!"
+}
