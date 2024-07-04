@@ -1,0 +1,9 @@
+#script to take input from user, append it to an array and display it
+for {set index 0} {$index<5} {incr index} {
+puts "Enter your name: "
+gets stdin name1
+set name($index) $name1
+}
+for {set name_index 0} {$name_index<5} {incr name_index} {
+puts "\t$name($name_index)"
+}
