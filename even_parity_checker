@@ -1,0 +1,28 @@
+//8-bit even parity detector. It will give 1 in the output when error is detected i.e. odd number of 1's are there in received bit
+module even_parity_checker(in,parity);
+input [7:0] in;
+output parity;
+assign parity = ^in;     //Output = 1 when error detected i.e. when odd no. of 1's in received data
+endmodule
+
+module parity_tb;
+
+reg [7:0] inp;
+wire  pp;
+even_parity_checker uut(.in(inp),.parity(pp));
+
+initial begin
+inp = 8'b00000000;
+end
+
+always@(inp)
+begin
+$monitor($time," Input = %b, Parity bit = %b", inp,pp);
+#10 inp = 8'b10110100;
+#10 inp = 8'b11110000;
+#10 inp = 8'b11001000;
+#10 inp = 8'b01000010;
+#10 inp = 8'b11001101;
+end
+
+endmodule
