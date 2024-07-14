@@ -1,0 +1,42 @@
+//32-bit ALU verilog code
+module alu_32bit(A,B,F,Y);
+input [31:0]A,B;
+input [2:0]F; output [63:0]Y;
+wire [31:0]sum_out1,sum_out2,sub_out1,sub_out2; wire [63:0]mul_out;
+adder add1(A,B,sum_out1); adder add2(A,1,sum_out2); subtractor sub1(A,B,sub_out1); subtractor sub2(A,1,sub_out2); mul mul(A,B,mul_out);
+assign Y = F[2]? (F[1] ? (F[0] ? 64'bz : 64'bz) : (F[0] ? mul_out : mul_out) ):
+(F[1] ? (F[0] ? sub_out2 : sub_out1) : (F[0] ? sum_out2 :sum_out1 )); endmodule
+//adder
+module adder(A,B,sum_out); input [31:0]A,B;
+output [33:0]sum_out; assign sum_out = A+B;
+endmodule
+//subtractor
+module subtractor(A,B,sub_out); input [31:0]A,B;
+output [33:0]sub_out; assign sub_out = A-B;
+endmodule
+//mul
+module mul(A,B,mul_out); input [31:0]A,B;
+output [63:0]mul_out; assign mul_out = A*B;
+endmodule
+
+//test bench code
+module alu_32bit_tb();
+reg [31:0]A,B;
+reg [2:0]F;
+wire [63:0]Y;
+alu_32bit alu0(A,B,F,Y);
+initial
+begin
+A=32'hFFFF; B=32'hFECB; 
+F=3'b000; 
+#100; F=3'b001; 
+#100; F=3'b010; 
+#100; F=3'b011; 
+#100; F=3'b100; 
+#100; F=3'b101; 
+#100; F=3'b110; 
+#100;
+$stop;
+end
+endmodule
+
