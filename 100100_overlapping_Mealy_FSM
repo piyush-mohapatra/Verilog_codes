@@ -1,0 +1,71 @@
+// Verilog code for Mealy Overlappinig Sequence Detector FSM for the sequence 100100 along with testbench
+module fsm_100100_overlapping(in,rst,clk,out); 
+input in,clk,rst;
+output reg out;
+parameter S0 = 3'b000,S1 = 3'b001,S2 = 3'b010,S3 = 3'b011,S4 = 3'b100, S5 = 3'b101;
+reg [2:0] state;
+
+always @(posedge clk,rst) begin
+
+if (rst == 1) begin
+state = 0;
+end
+else begin
+case(state)
+S0 : begin state = in?S1:S0;  out =0; end
+S1 : begin state = in?S1:S2; out =0; end
+S2 : begin state = in?S1:S3; out =0; end
+S3 : begin state = in?S4:S0; out =0; end
+S4 : begin state = in?S1:S5; out =0; end
+S5 : begin state = in?S1:S3; out = in?0:1; end  
+default begin state = S0; out = 0; end
+endcase
+end
+end
+
+endmodule
+
+
+
+//////// Test Bench ////////
+
+module fsm_tb;
+reg inp,clock,reset;
+wire outp;
+
+fsm_100100_overlapping uut(.in(inp), .out(outp), .clk(clock), .rst(reset));
+
+always #10 clock = ~clock;
+//input sequence given in TB : 01011001010010010011001001
+initial begin
+reset = 1;
+clock = 0;
+#4 reset =0;
+#15 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+#20 inp = 0;
+#20 inp = 0;
+#20 inp = 1;
+end
+endmodule
