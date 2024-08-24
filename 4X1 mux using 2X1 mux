@@ -1,0 +1,41 @@
+//This is a 4X1 multiplexer built using 2X1 multiplexer
+
+module mux2x1(a,b,s,y);
+output [1:0] y;
+input [1:0] a,b;
+input s;
+assign y = s?b:a;
+endmodule
+
+module mux4x1(in0,in1,in2,in3,sel0,sel1,out);
+output [1:0] out;
+input [1:0] in0,in1,in2,in3;
+input sel0,sel1;
+wire [1:0] w1,w2;
+
+mux2x1 dut1(.a(in0),.b(in1),.s(sel1), .y(w1));
+mux2x1 dut2(.a(in2),.b(in3),.s(sel1), .y(w2));
+mux2x1 dut3(.a(w1),.b(w2),.s(sel0), .y(out));
+endmodule
+
+module tb;
+reg [1:0] in0,in1,in2,in3;
+reg sel0,sel1;
+wire [1:0] out;
+
+mux4x1 uut(in0,in1,in2,in3,sel0,sel1,out);
+initial
+begin
+in0 = 2'b00; 
+in1 = 2'b01;
+in2 = 2'b10;
+in3 = 2'b11;
+sel0 = 1'b0;
+sel1 = 1'b0;
+
+#5 sel1 = 1'b1;
+#5 sel1 = 1'b0;
+#5 sel0 = 1'b1;
+#5 sel1 = 1'b1;
+end
+endmodule
