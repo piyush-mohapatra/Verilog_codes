@@ -31,11 +31,11 @@ in1 = 2'b01;
 in2 = 2'b10;
 in3 = 2'b11;
 sel0 = 1'b0;
-sel1 = 1'b0;
+sel1 = 1'b0;  //sel0 sel1 = 00  this is the order
 
-#5 sel1 = 1'b1;
-#5 sel1 = 1'b0;
-#5 sel0 = 1'b1;
-#5 sel1 = 1'b1;
+#5 sel1 = 1'b1;  //sel = 01
+#5 sel1 = 1'b0;  //sel = 00
+#5 sel0 = 1'b1;  //sel = 10
+#5 sel1 = 1'b1;  //sel = 11
 end
 endmodule
