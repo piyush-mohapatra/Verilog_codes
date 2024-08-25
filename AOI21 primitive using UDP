@@ -1,0 +1,40 @@
+//Verilog code for AOI21 primitive using UDP
+
+module aoi_primitive(p,q,r,y); //Main module
+output y;
+input p,q,r;
+aoi21 (y,p,q,r); //Just like a normal gate primitive, instance name is not compulsory
+initial begin
+#1 $monitor("Output is %b for input p=%b q=%b r=%b",y,p,q,r); //#1 added to avoid race condition
+end
+endmodule
+
+
+primitive aoi21(y,a,b,c);  //AOI21 primitive definition
+output y;
+input a,b,c;
+
+table			//LUT 
+      //a b c : y
+	0 0 0 : 1;
+	? ? 1 : 0; //? means 0, 1 or x
+	0 1 0 : 1;
+	1 0 0 : 1;
+	1 1 0 : 0;
+endtable
+endprimitive
+
+
+///////TESTBENCH////////
+
+module aoi_primitive_tb;  
+reg p,q,r;
+wire y;
+aoi_primitive uut(p,q,r,y);
+
+initial 
+begin
+p=1; q=0; r=0;
+#5  p=1; q=0; r=1;
+end
+endmodule
