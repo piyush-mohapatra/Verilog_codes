@@ -1,0 +1,45 @@
+//Verilog code for D latch
+module d_latch(din,en,rst,y);
+input en,rst;
+input [1:0] din;
+output reg [1:0] y;
+
+always @(rst,en,din) begin
+if (rst==1)
+y <= 0;
+else if (rst==0) begin
+if (en==1)
+y <= din; //NOTICE no 'else' statement used to amke it a latch
+end
+end
+endmodule
+
+
+module tb_d_latch();
+reg en,rst;
+reg [1:0] din;
+wire [1:0]out;
+dff dut(.din(din),.en(en),.rst(rst),.y(out));
+initial begin
+en = 1;
+rst= 0;
+
+din = 2'b00;
+#5 din = 2'b10;
+#5 din = 2'b11;
+#6 rst = 1;
+#5 din = 2'b01;
+#5 din = 2'b10;
+#6 rst = 0;
+#5 din = 2'b10;
+#5 din = 2'b01;
+#5 din = 2'b10;
+#5 en = 0;
+#5 din = 2'b11;
+#5 din = 2'b01;
+#5 din = 2'b00;
+#5 en =1;
+#5 din = 2'b01;
+#5 din = 2'b11;
+end
+endmodule
