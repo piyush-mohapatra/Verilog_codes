@@ -1,0 +1,40 @@
+//Asynchronous reset D flipflop
+module dff(din,clk,rst,y);
+input clk,rst;
+input [1:0] din;
+output reg [1:0]y;
+
+always @(posedge clk or posedge rst) //To make it synchronous reset, remove 'posedge reset'
+begin 
+if(rst==1) 
+y<=0;
+else
+y<=din;
+end
+
+endmodule
+
+
+module tb_dff();
+reg clk,rst;
+reg [1:0] din;
+wire [1:0]out;
+dff dut(.din(din),.clk(clk),.rst(rst),.y(out));
+initial begin
+clk = 1;
+rst= 0;
+
+din = 2'b00;
+#5 din = 2'b10;
+#5 din = 2'b11;
+#5 rst = 1;
+#5 din = 2'b01;
+#5 din = 2'b10;
+#6 rst = 0;
+#5 din = 2'b10;
+#5 din = 2'b01;
+#5 din = 2'b11;
+
+end
+always #5 clk = ~clk;
+endmodule
