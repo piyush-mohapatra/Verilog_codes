@@ -1,0 +1,36 @@
+//Verilog code for JK Flipflop
+module jkff(j,k,clk,q);
+input j,k,clk;
+output reg q;
+
+always @(posedge clk) begin
+case({j,k})
+2'b00 : q <= q;
+2'b01 : q <= 0;
+2'b10 : q <= 1;
+2'b11 : q <= ~q;
+endcase
+end
+endmodule
+
+module tb;
+reg j,k,clk;
+wire q;
+
+jkff uut(j,k,clk,q);
+initial begin
+clk =1;
+j=1;k=0;
+$display("\t\t   time clk J  K  Q");
+$monitor("%t   %b  %b  %b  %b ",$time,clk,j,k,q);
+
+#20 {j,k} = 2'b01;
+#20 {j,k} = 2'b10;
+#20 {j,k} = 2'b01;
+#20 {j,k} = 2'b11;
+#40 {j,k} = 2'b00;
+#30 {j,k} = 2'b10;
+end
+
+always #5 clk = ~clk;
+endmodule
