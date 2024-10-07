@@ -1,0 +1,32 @@
+//Positive edge detector
+module ped(clk,din,out);
+input clk,din;
+output out;
+reg dsh;
+always @(posedge clk) begin
+dsh <= din;
+end
+
+assign out = din & ~dsh; //Just this line changes in ped,ned and ded
+endmodule
+
+/////Testbench/////
+module tb_ped;
+wire out;
+reg clk,din;
+
+ped dut(clk,din,out);
+
+initial begin
+din = 0;
+clk=1; //Try setting the clk to 1 initially and see output
+#20 din <= 1;//Try using all blocking assignment statements
+#20 din <= 0;
+#20 din <= 1;
+#10 din <= 0;
+end
+always #5 clk = ~clk;
+endmodule
+
+//When clk is 1 initially, dsh gets shifted by one full clock period
+//When clk is 0 initially, dsh gets shifted by half clock period only
