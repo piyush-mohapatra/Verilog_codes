@@ -1,1 +1,1 @@
-This is a verilog code for 4 bit ring counter with right shift feature
+This is my verilog code repository. I have written all the verilog codes for digital circuits from scratch. 
