@@ -1,0 +1,47 @@
+//Verilog code for 4-bit left and right shift register
+module shift_reg_lr(in,out,clk,rst,en);
+input clk,rst;
+input in;
+output reg [3:0]out;
+input en;
+always @(posedge clk) begin
+
+if (!rst) out=0;
+else
+case (en)     //Logic for left and right shift using MUX
+0 : out = {out[2:0],in}; // Logic for left shift
+1 : out = {in,out[3:1]}; // Logic for right shift
+endcase
+end
+
+endmodule
+
+/////// Testbench ///////
+module tb_shift_reg_lr();
+reg clk,rst,in,en;
+wire [3:0]out;
+
+shift_reg_lr uut(in,out,clk,rst,en);
+
+initial begin 
+rst=0;
+clk=1;
+in=0;
+en=1;
+#10 rst = 1;
+#10 in = 1;
+#10 in = 0;
+#50 in = 1;
+#10 in = 0;
+
+#40 en=0;
+#10 rst = 1;
+#10 in = 1;
+#10 in = 0;
+#50 in = 1;
+#10 in = 0;
+
+#50 $stop;
+end
+always #5 clk= ~clk;
+endmodule
