@@ -1,0 +1,23 @@
+//Verilog code for 4 bit binary to gray code converter
+module converter_gb(input [3:0]g,output [3:0]b);
+assign b[3]=g[3];
+assign b[2]=b[3]^g[2];
+assign b[1]=b[2]^g[1];
+assign b[0]=b[1]^g[0];
+endmodule
+
+///// Testbench /////
+module tb_converter_gb;
+reg [3:0]g;
+wire [3:0]b;
+converter_gb uut(g,b);
+initial begin
+$monitor("%t G = %b  B = %b",$time,g,b);
+    g=4'b0100;
+#10 g=4'b0010;
+#10 g=4'b1010;
+#10 g=4'b1110;
+#10 $stop;
+
+end
+endmodule
