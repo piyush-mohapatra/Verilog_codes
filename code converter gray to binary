@@ -1,4 +1,4 @@
-//Verilog code for 4 bit binary to gray code converter
+//Verilog code for 4 bit gray to binary code converter
 module converter_gb(input [3:0]g,output [3:0]b);
 assign b[3]=g[3];
 assign b[2]=b[3]^g[2];
