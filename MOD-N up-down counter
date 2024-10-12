@@ -1,0 +1,31 @@
+//Verilog code for MOD-N up-down counter
+module up_down_Ncounter #(parameter N=8) (clk,rst,sel,count);
+input clk,rst,sel;
+output reg [9:0]count;
+
+always @(posedge clk) begin
+case (sel)
+0 : count <= rst?(N-1):(count-1);//Much more efficient coding than using if...else
+1 : count <= rst?(0):(count+1);
+default : count <= 0;
+endcase
+end
+endmodule
+
+module tb_Nud_counter;
+reg clk,rst,sel;
+wire [2:0] count;
+up_down_Ncounter #() uut(clk,rst,sel,count);
+initial begin
+clk=1;
+sel=1;
+rst=1;
+#20 rst=0; 
+#110 sel=0;
+#140 rst=1;
+#20 rst=0;
+#100 sel=1;
+#50 $stop;
+end
+always #5 clk = ~clk;
+endmodule
