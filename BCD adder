@@ -1,0 +1,45 @@
+//Verilog code for BCD adder
+module bcd_adder(a,b,s,cin,cout);
+input [3:0] a,b;
+input cin;
+output reg [3:0]s;
+output reg cout;
+reg [3:0] s_temp;
+always @(a,b) begin
+s_temp=a+b+cin;
+if(s_temp>9) begin 
+s=s_temp+6; 
+cout=1;
+end
+else begin 
+s=s_temp;
+cout=0;
+end
+end
+endmodule
+
+
+module tb_bcd_adder;
+reg [3:0]a,b;
+reg cin;
+wire [3:0] s;
+wire cout;
+
+bcd_adder uut(a,b,s,cin,cout);
+
+initial begin
+a=4'b0011;
+b=4'b0101;
+cin=1;
+#10;
+a=4'b0001;
+b=4'b0100;
+cin=0;
+#10;
+a=4'b1000;
+b=4'b0010;
+cin=1;
+#10;
+end 
+
+endmodule
