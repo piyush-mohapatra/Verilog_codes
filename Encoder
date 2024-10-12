@@ -1,0 +1,40 @@
+//8 to 3 Encoder
+module encoder(i,o);
+input [7:0] i;
+output reg [2:0] o;
+
+always @(i) begin
+case(i)
+8'b00000001 : o=0;
+8'b00000010 : o=1;
+8'b00000100 : o=2;
+8'b00001000 : o=3;
+8'b00010000 : o=4;
+8'b00100000 : o=5;
+8'b01000000 : o=6;
+8'b10000000 : o=7;
+default : o=0;
+endcase
+end
+endmodule
+
+module tb_encoder;
+reg [7:0]i;
+wire [2:0]o;
+
+encoder uut(i,o);
+
+initial begin
+$monitor($time," Input = %b Output = %b",i,o);
+i=8'b00000100;
+#5;
+i=8'b00000001;
+#5;
+i=8'b00010000;
+#5;
+i=8'b10000000;
+#5;
+
+end
+endmodule
+
