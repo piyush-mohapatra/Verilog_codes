@@ -1,0 +1,31 @@
+//Verilog code for gray counter
+module gray_counter(clk,rst,out);
+input clk,rst;
+output [3:0]out;
+reg [3:0]count;
+always @(posedge clk) begin          //Sequential circuit for a normal binary counter
+if (rst) count = 0;
+else count = count+1;
+end
+assign out[3] = count[3];           //Combinational circuit to convert output of above counter to gray
+assign out[2] = count[3]^count[2]; 
+assign out[1] = count[2]^count[1]; 
+assign out[0] = count[1]^count[0]; 
+endmodule
+
+////////// Testbench ///////
+module tb_gray_counter;
+reg clk,rst;
+wire [3:0]out;
+
+gray_counter uut(.clk(clk),.rst(rst),.out(out));
+
+initial begin
+$monitor($time," Gray counter: %0d",out);
+clk=1;
+rst=1;
+#30 rst=0;
+end
+always #5 clk = ~clk;
+
+endmodule
