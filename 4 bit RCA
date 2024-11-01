@@ -1,0 +1,69 @@
+//Verilog code for 4-bit BPA or RCA
+module ha(a,b,s,c);
+input a,b;
+output s,c;
+assign s=a^b;
+assign c=a&b;
+//Just for demonstration
+wire w;
+assign w=1'b0^1'b0; 
+//Just for demonstration
+endmodule
+
+module fa(a,b,cin,sum,cout);
+input a,b;
+input cin;
+output sum;
+output cout;
+wire w1,w2,w3;
+ha instance1(.a(a),.b(b),.s(w1),.c(w2));
+ha instance2(.a(w1),.b(cin),.s(sum),.c(w3));
+assign cout=w2|w3;
+endmodule
+
+module rca_4bit(a,b,cin,sum,cout);
+input [3:0]a,b;
+input cin;
+output [3:0]sum;
+output cout;
+wire [3:0]c;
+wire [4:0]final_sum; //It is not a part of actual RCA
+fa instance3(a[0],b[0],cin,sum[0],c[0]);
+fa instance4(a[1],b[1],c[0],sum[1],c[1]);
+fa instance5(a[2],b[2],c[1],sum[2],c[2]);
+fa instance6(a[3],b[3],c[2],sum[3],c[3]);
+assign cout=c[3];
+assign final_sum = {cout,sum};
+endmodule
+
+
+//////// Testbench ////////
+module rca_4bit_tb();
+reg [3:0]a,b;
+reg cin;
+wire [3:0]sum;
+wire cout;
+
+rca_4bit dut(.a(a),.b(b),.cin(cin),.sum(sum),.cout(cout));
+
+initial begin
+$display("NOTE: Final sum is not a part of 4-bit RCA");
+$monitor("Time %0t   a=%0d b=%0d cin=%0d sum=%0d cout=%0d Final sum=%0d",$time,a,b,
+cin,sum,cout,dut.final_sum);
+//All the test case inputs are written carefully to test each corner case
+a=4'b0000;b=4'b0000;cin=0;
+#5 a=4'b0010;b=4'b0100;cin=0;
+#5 a=4'b0110;b=4'b0100;cin=1;
+#5 a=4'b0110;b=4'b0100;cin=1;
+#5 a=4'b1000;b=4'b0111;cin=0;
+#5 a=4'b1000;b=4'b0111;cin=1;
+#5 a=4'b1001;b=4'b0111;cin=1;
+#5 a=4'b1110;b=4'b1110;cin=0;
+#5 a=4'b1111;b=4'b1111;cin=1;
+
+//Notice below how to display a wire from module ha 
+#1 $display("Just for demonstration: w = %b",dut.instance3.instance1.w); 
+
+#5 $stop;
+end
+endmodule
