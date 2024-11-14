@@ -1,0 +1,62 @@
+//Verilog code for different levels of abstraction and modeling of 
+//a combinational circuit
+
+
+module model_one(a,b,c,d,out);  //gate level modeling
+input a,b,c,d;
+output out;
+wire w1,w2,w3;
+
+and g0(w1,a,b);
+nor g1(w2,w1,c);
+or g2(w3,w2,d);
+not g3(out,w3);
+endmodule 
+
+
+/*
+module model_two(a,b,c,d,out);  //data flow modeling
+input a,b,c,d;
+output out;
+wire w1,w2,w3;
+
+assign w1 = a&b;
+assign w2 = ~(w1|c);
+assign w3 = w2|d;
+assign out = ~w3;
+endmodule
+*/
+
+/*
+module model_three(a,b,c,d,out);  //behavioral modeling
+input a,b,c,d;
+output reg out;
+reg w1,w2,w3;
+
+always @(a,b,c,d) begin
+w1 = a&b;
+w2 = ~(w1|c);
+w3 = w2|d;
+out = ~w3;
+end
+endmodule
+*/
+
+
+// Testbench remains same for all the above modules //
+module model_tb;
+reg a,b,c,d;
+wire out;
+model_one uut(a,b,c,d,out);
+initial begin
+$monitor("time=%2t  a=%0b b=%b c=%b d=%b out=%b",$time,a,b,c,d,out);
+a=0;b=0;c=0;d=0;    //output 0
+#5 a=1;b=0;c=0;d=0; //output 0
+#5 a=1;b=1;c=0;d=0; //output 1
+#5 a=0;b=0;c=0;d=1; //output 0
+#5 a=0;b=1;c=0;d=0; //output 0
+#5 a=1;b=1;c=1;d=0; //output 1
+#5 a=0;b=0;c=1;d=0; //output 1
+#5 $stop;
+end
+endmodule
