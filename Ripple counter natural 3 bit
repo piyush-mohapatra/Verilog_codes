@@ -1,0 +1,45 @@
+//Verilog code for natural Ripple down counter MOD-8
+//It can be implemented in all 4 configurations for 2 UP counte and 2 DOWN counter
+//by very minor changes(suggested below in comments) in the below code
+module jkff(clk,rst,j,k,q);
+input clk,rst,j,k;
+output reg q;
+
+always @(negedge clk, posedge rst) //change it to posedge clk or negedge clk
+if(rst) q <= 1'b0;
+else begin
+case({j,k})
+2'b00 : q <= q;
+2'b01 : q <= 1'b0;
+2'b10 : q <= 1'b1;
+2'b11 : q <= ~q;
+endcase
+end
+endmodule
+
+module ripple_counter(clk,rst,a0,a1,a2);
+input clk,rst;
+output a0,a1,a2; //Notice: no need to declare it as reg. Confusion point.
+
+jkff f0(.clk(clk),.rst(rst),.j(1'b1),.k(1'b1),.q(a0)); //clk is applied to a0
+jkff f1(.clk(~a0),.rst(rst),.k(1'b1),.j(1'b1),.q(a1)); //change a0 and ~a0 here 
+jkff f2(.clk(~a1),.rst(rst),.k(1'b1),.j(1'b1),.q(a2)); //change a1 and ~a1 here
+endmodule
+
+
+
+module ripple_tb();
+reg clk,rst;
+wire a0,a1,a2;
+
+ripple_counter uut(clk,rst,a0,a1,a2);
+
+initial begin
+$monitor($time,"  %b%b%b",a2,a1,a0); //a2 is MSB and a0 is LSB
+clk = 1;
+rst = 1;
+#20 rst = 0;
+end
+always #5 clk = ~clk;
+
+endmodule
