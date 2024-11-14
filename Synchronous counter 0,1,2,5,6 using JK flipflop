@@ -1,0 +1,49 @@
+//Verilog code for synchronous counter 0,1,2,5,6 using JK flipflop
+
+module jkff(clk,rst,j,k,q);
+input clk,rst,j,k;
+output reg q;
+
+always @(posedge clk, posedge rst)
+if(rst) q <= 1'b0;
+else begin
+case({j,k})
+2'b00 : q <= q;
+2'b01 : q <= 1'b0;
+2'b10 : q <= 1'b1;
+2'b11 : q <= ~q;
+endcase
+end
+endmodule
+
+module syn_counter(clk,rst,qa,qb,qc);
+input clk,rst;
+output qa,qb,qc;
+wire ja,ka,jb,kb,jc,kc;
+
+assign ja = qb & (~qc);
+assign ka = ~qc;
+assign jb = qa | qc;
+assign kb = 1'b1;
+assign jc = ~qa;
+assign kc = ~qb;   // Flipflops are arranged L to R as ffa,ffb,ffc
+jkff ffa(.clk(clk),.rst(rst),.j(ja),.k(ka),.q(qa)); 
+jkff ffb(.clk(clk),.rst(rst),.j(jb),.k(kb),.q(qb));
+jkff ffc(.clk(clk),.rst(rst),.j(jc),.k(kc),.q(qc));
+endmodule
+
+module syn_counter_tb();
+reg clk,rst;
+wire qa,qb,qc;
+
+syn_counter uut(clk,rst,qa,qb,qc);
+
+initial begin
+$monitor($time,"  %b%b%b",qa,qb,qc); //qa is MSB and qc is LSB
+clk = 1;
+rst = 1;
+#20 rst = 0;
+end
+always #5 clk = ~clk;
+
+endmodule
